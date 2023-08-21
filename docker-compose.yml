@@ -3,5 +3,9 @@ services:
     image: localstack/localstack-pro
     ports:
       - 4566:4566
+      - 4510:4510
     environment:
       - LOCALSTACK_API_KEY
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
