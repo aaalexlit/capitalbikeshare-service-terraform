@@ -37,25 +37,30 @@ Check that the bucket is there just in case
 aws --endpoint-url=http://localhost:4566 s3 ls
 ```
 
-To init tflocal
+Export environment name that we wish to work with. For instance, `stg`
 
 ```shell
-tflocal init
+export TF_ENV="stg"
+```
+To init tflocal with the corresponding s3 backend configuration (for staging/prod)
+Eg the following will do the init with the staging backend
+```shell
+tflocal init -reconfigure -backend-config=environments/${TF_ENV}/backend.config
 ```
 
 See the plan
 ```shell
-tflocal plan -var-file="vars/stg.tfvars"
+tflocal plan -var-file="environments/${TF_ENV}/environment.tfvars"
 ```
 
 Apply 
 
 ```shell
-tflocal apply -var-file="vars/stg.tfvars"
+tflocal apply -var-file="environments/${TF_ENV}/environment.tfvars"
 ```
 
 Destroy
 
 ```shell
-tflocal destroy -var-file="vars/stg.tfvars"
+tflocal destroy -var-file="environments/${TF_ENV}/environment.tfvars"
 ```
