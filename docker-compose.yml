@@ -1,0 +1,7 @@
+services:
+  localstack:
+    image: localstack/localstack-pro
+    ports:
+      - 4566:4566
+    environment:
+      - LOCALSTACK_API_KEY
