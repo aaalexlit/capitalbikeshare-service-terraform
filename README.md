@@ -105,3 +105,7 @@ Destroy (needs confirmation)
 ```shell
 tflocal destroy -var-file="environments/${TF_ENV}/environment.tfvars"
 ```
+
+# Deploy on AWS
+
+Follow the [create-aws-infra.sh](create-aws-infra.sh) script

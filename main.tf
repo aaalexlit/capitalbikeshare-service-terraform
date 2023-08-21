@@ -21,7 +21,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_ecs_task_definition" "service_task" {
-  family = "prediction-service-task"
+  family = "prediction-service"
   container_definitions = jsonencode([
     {
       name      = "prediction-service"

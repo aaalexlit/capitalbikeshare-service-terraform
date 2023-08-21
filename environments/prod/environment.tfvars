@@ -1,7 +1,7 @@
 environment = "production"
 
 cpu    = 512
-memory = 1024
+memory = 2048
 
 region = "us-west-2"
 
