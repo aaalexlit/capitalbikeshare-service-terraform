@@ -116,4 +116,4 @@ jobs:
         id: tf-destroy
         run: |
           terraform init -reconfigure -backend-config="environments/${{inputs.environment}}/backend.config"
-          terraform destroy -var-file="environments/${{inputs.environment}}/environment.tfvars"
+          terraform destroy -auto-approve -var-file="environments/${{inputs.environment}}/environment.tfvars"
