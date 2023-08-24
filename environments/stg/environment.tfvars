@@ -1,6 +1,6 @@
 environment = "staging"
 
-cpu    = 512
+cpu    = 256
 memory = 2048
 
 region = "us-west-2"
