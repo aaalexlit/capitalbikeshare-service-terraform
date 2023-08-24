@@ -53,7 +53,7 @@ jobs:
       - name: TF plan ECR
         id: tf-plan-ecr
         run: |
-          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config" && \
+          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config"
           terraform plan -target=aws_ecr_repository.prediction_service_ecr_repo -out=ecr_repo.tfplan --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars
       - name: TF apply ECR
         id: tf-apply-ecr
