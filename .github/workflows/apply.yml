@@ -1,0 +1,106 @@
+name: apply-to-aws
+on:
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'environments/stg/**'
+  #     - '*.tf'
+  workflow_call:
+    outputs:
+      ecr_registry_url:
+        description: "ECR registry URL"
+        value: ${{ jobs.apply.outputs.ecr_registry_url }}
+      app_url:
+          description: "Service URL"
+          value: ${{ jobs.apply.outputs.app_url }}
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "What environment to act on"
+        type: choice
+        required: true
+        options:
+          - stg
+          - prod
+        default: stg
+      destroy:
+        description: "Destroy the infra"
+        default: false
+        type: boolean
+      full_deployment:
+        description: "If true creates all the infra otherwise only ECR repo to publish image to"
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  apply:
+    if: !github.event.inputs.destroy
+    runs-on: ubuntu-latest
+    outputs:
+      ecr_registry_url: ${{steps.tf-apply-ecr.outputs.ecr_repository_url}}
+      app_url: "http://${{steps.tf-apply.outputs.app_url}}"
+
+    steps:
+      - name: check out repo
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+      - if: github.event.inputs.full_deployment
+        name: TF plan
+        id: tf-plan
+        run: |
+          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config" \
+          && terraform plan --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars
+
+      - name: TF apply
+        id: tf-apply
+        if: ${{ steps.tf-plan.outcome }} == 'success'
+        run: |
+          terraform apply -auto-approve --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars
+          echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
+          echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
+
+      - if: !github.event.inputs.full_deployment
+        name: TF plan
+        id: tf-plan-ecr
+        run: |
+          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config" && \
+          terraform plan -target=aws_ecr_repository.prediction_service_ecr_repo -out=ecr_repo.tfplan --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars
+      - name: TF apply
+        id: tf-apply-ecr
+        if: ${{ steps.tf-plan.outcome }} == 'success'
+        run: |
+          terraform apply ecr_repo.tfplan
+          echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
+
+  destroy:
+    if: github.event.inputs.destroy
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repo
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+      - name: TF destroy
+        id: tf-destroy
+        run: |
+          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config"
+          terraform destroy -var-file="environments/${{github.event.inputs.environment}}environment.tfvars"
