@@ -36,10 +36,10 @@ on:
 
 jobs:
   apply-ecr:
-    if: ${{!fromJson(inputs.destroy) && fromJson(inputs.ecr-only)}}
+    if: ${{ !fromJson(inputs.destroy) && fromJson(inputs.ecr-only) }}
     runs-on: ubuntu-latest
     outputs:
-      ecr_registry_url: ${{steps.tf-apply-ecr.outputs.ecr_repository_url}}
+      ecr_registry_url: ${{ steps.tf-apply-ecr.outputs.ecr_repository_url }}
     
     steps:
       - name: check out repo
@@ -53,8 +53,8 @@ jobs:
       - name: TF plan ECR
         id: tf-plan-ecr
         run: |
-          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config"
-          terraform plan -target=aws_ecr_repository.prediction_service_ecr_repo -out=ecr_repo.tfplan --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars"
+          terraform init -reconfigure -backend-config="environments/${{ inputs.environment }}/backend.config"
+          terraform plan -target=aws_ecr_repository.prediction_service_ecr_repo -out=ecr_repo.tfplan --var-file="environments/${{ inputs.environment }}/environment.tfvars"
       - name: TF apply ECR
         id: tf-apply-ecr
         if: ${{ steps.tf-plan-ecr.outcome }} == 'success'
@@ -63,11 +63,11 @@ jobs:
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
   
   apply:
-    if: ${{!fromJson(inputs.destroy) && !fromJson(inputs.ecr-only)}}
+    if: ${{ !fromJson(inputs.destroy) && !fromJson(inputs.ecr-only) }}
     runs-on: ubuntu-latest
     outputs:
-      ecr_registry_url: ${{steps.tf-apply.outputs.ecr_repository_url}}
-      app_url: "http://${{steps.tf-apply.outputs.app_url}}"
+      ecr_registry_url: ${{ steps.tf-apply.outputs.ecr_repository_url }}
+      app_url: "http://${{ steps.tf-apply.outputs.app_url }}"
 
     steps:
       - name: check out repo
@@ -85,19 +85,19 @@ jobs:
       - name: TF plan
         id: tf-plan
         run: |
-          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config" \
-          && terraform plan --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars"
+          terraform init -reconfigure -backend-config="environments/${{inputs.environment}}/backend.config" \
+          && terraform plan --var-file="environments/${{inputs.environment}}/environment.tfvars"
 
       - name: TF apply
         id: tf-apply
         if: ${{ steps.tf-plan.outcome }} == 'success'
         run: |
-          terraform apply -auto-approve --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars"
+          terraform apply -auto-approve --var-file="environments/${{inputs.environment}}/environment.tfvars"
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
           echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
 
   destroy:
-    if: ${{fromJson(inputs.destroy)}}
+    if: ${{ fromJson(inputs.destroy) }}
     runs-on: ubuntu-latest
     steps:
       - name: check out repo
@@ -115,5 +115,5 @@ jobs:
       - name: TF destroy
         id: tf-destroy
         run: |
-          terraform init -reconfigure -backend-config="environments/${{github.event.inputs.environment}}/backend.config"
-          terraform destroy -var-file="environments/${{github.event.inputs.environment}}environment.tfvars"
+          terraform init -reconfigure -backend-config="environments/${{inputs.environment}}/backend.config"
+          terraform destroy -var-file="environments/${{inputs.environment}}/environment.tfvars"
