@@ -13,9 +13,9 @@ on:
         default: false
         type: boolean
     outputs:
-      ecr_registry_url:
-        description: "ECR registry URL"
-        value: ${{ jobs.apply.outputs.ecr_registry_url }}
+      ecr_repository_url:
+        description: "ECR repository URL"
+        value: ${{ jobs.apply.outputs.ecr_repository_url }}
       app_url:
         description: "Service URL"
         value: ${{ jobs.apply.outputs.app_url }}
@@ -41,7 +41,7 @@ jobs:
     if: ${{ !fromJson(inputs.destroy) && fromJson(inputs.ecr-only) }}
     runs-on: ubuntu-latest
     outputs:
-      ecr_registry_url: ${{ steps.tf-apply-ecr.outputs.ecr_repository_url }}
+      ecr_repository_url: ${{ steps.tf-apply-ecr.outputs.ecr_repository_url }}
     steps:
       - name: check out repo
         uses: actions/checkout@v3
@@ -67,7 +67,7 @@ jobs:
     if: ${{ !fromJson(inputs.destroy) && !fromJson(inputs.ecr-only) }}
     runs-on: ubuntu-latest
     outputs:
-      ecr_registry_url: ${{ steps.tf-apply.outputs.ecr_repository_url }}
+      ecr_repository_url: ${{ steps.tf-apply.outputs.ecr_repository_url }}
       app_url: "http://${{ steps.tf-apply.outputs.app_url }}"
 
     steps:
