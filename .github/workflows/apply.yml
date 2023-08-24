@@ -7,6 +7,17 @@ on:
       - 'environments/stg/**'
       - '*.tf'
   workflow_call:
+    inputs:
+      environment:
+        description: "What environment to act on"
+        type: string
+        required: true
+        default: stg
+      ecr-only:
+        description: "Only create ECR repo"
+        required: true
+        default: false
+        type: boolean
     outputs:
       ecr_registry_url:
         description: "ECR registry URL"
@@ -26,11 +37,6 @@ on:
         default: stg
       destroy:
         description: "Destroy the infra"
-        default: false
-        type: boolean
-      ecr-only:
-        description: "Only create ECR repo"
-        required: true
         default: false
         type: boolean
 
