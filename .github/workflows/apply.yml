@@ -64,7 +64,7 @@ jobs:
 
       - name: TF apply
         id: tf-apply
-        if: ${{ steps.tf-plan.outcome }} == 'success'
+        if: ${{fromJson(github.event.inputs.full_deployment)}} && ${{ steps.tf-plan.outcome }} == 'success'
         run: |
           terraform apply -auto-approve --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
@@ -78,7 +78,7 @@ jobs:
           terraform plan -target=aws_ecr_repository.prediction_service_ecr_repo -out=ecr_repo.tfplan --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars
       - name: TF apply
         id: tf-apply-ecr
-        if: ${{ steps.tf-plan.outcome }} == 'success'
+        if: ${{!fromJson(github.event.inputs.full_deployment)}} && ${{ steps.tf-plan.outcome }} == 'success'
         run: |
           terraform apply ecr_repo.tfplan
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
