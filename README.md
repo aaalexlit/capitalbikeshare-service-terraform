@@ -1,3 +1,17 @@
+# Deploy to AWS
+
+## Automation via GitHub Actions
+A push to master will trigger infrastructure deployment to AWS using Github acitons defined in [apply.yml](.github/workflows/apply.yml)
+
+Also its possible to trigger the deployment manually using [Github Actions](https://github.com/aaalexlit/capitalbikeshare-service-terraform/actions/workflows/apply.yml)
+
+<img src="launch_deployment_manually.png" alt="drawing" style="width:400px;"/>
+
+If the "Destroy the infra" option is selected the infra will be destroyed instead of applying the changes
+
+## Manual deployment to AWS from local
+To deploy to AWS from local manually follow the [create-aws-infra.sh](create-aws-infra.sh) script
+
 # Local development
 to make localstack work with terraform we need to use `terraform-local`
 more info here
@@ -106,6 +120,3 @@ Destroy (needs confirmation)
 tflocal destroy -var-file="environments/${TF_ENV}/environment.tfvars"
 ```
 
-# Deploy on AWS
-
-Follow the [create-aws-infra.sh](create-aws-infra.sh) script
