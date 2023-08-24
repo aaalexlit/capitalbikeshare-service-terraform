@@ -12,8 +12,8 @@ on:
         description: "ECR registry URL"
         value: ${{ jobs.apply.outputs.ecr_registry_url }}
       app_url:
-          description: "Service URL"
-          value: ${{ jobs.apply.outputs.app_url }}
+        description: "Service URL"
+        value: ${{ jobs.apply.outputs.app_url }}
   workflow_dispatch:
     inputs:
       environment:
@@ -36,7 +36,7 @@ on:
 
 jobs:
   apply:
-    if: !github.event.inputs.destroy
+    if: ${{!fromJson(github.event.inputs.destroy)}}
     runs-on: ubuntu-latest
     outputs:
       ecr_registry_url: ${{steps.tf-apply-ecr.outputs.ecr_repository_url}}
@@ -55,7 +55,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
         with:
           terraform_wrapper: false
-      - if: github.event.inputs.full_deployment
+      - if: ${{fromJson(github.event.inputs.full_deployment)}}
         name: TF plan
         id: tf-plan
         run: |
@@ -70,7 +70,7 @@ jobs:
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
           echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
 
-      - if: !github.event.inputs.full_deployment
+      - if: ${{!fromJson(github.event.inputs.full_deployment)}}
         name: TF plan
         id: tf-plan-ecr
         run: |
@@ -84,7 +84,7 @@ jobs:
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
 
   destroy:
-    if: github.event.inputs.destroy
+    if: ${{fromJson(github.event.inputs.destroy)}}
     runs-on: ubuntu-latest
     steps:
       - name: check out repo
