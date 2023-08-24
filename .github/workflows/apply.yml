@@ -66,7 +66,7 @@ jobs:
         id: tf-apply
         if: ${{fromJson(github.event.inputs.full_deployment)}} && ${{ steps.tf-plan.outcome }} == 'success'
         run: |
-          terraform apply -auto-approve --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars
+          terraform apply -auto-approve --var-file="environments/${{github.event.inputs.environment}}/environment.tfvars"
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
           echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
 
