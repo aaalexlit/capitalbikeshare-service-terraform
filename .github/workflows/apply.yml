@@ -1,11 +1,11 @@
 name: apply-to-aws
 on:
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'environments/stg/**'
-  #     - '*.tf'
+  push:
+    branches:
+      - main
+    paths:
+      - 'environments/stg/**'
+      - '*.tf'
   workflow_call:
     outputs:
       ecr_registry_url:
@@ -31,7 +31,7 @@ on:
       ecr-only:
         description: "Only create ECR repo"
         required: true
-        default: true
+        default: false
         type: boolean
 
 jobs:
