@@ -18,7 +18,7 @@ output "task_definition_json" {
 }
 
 output "container_name" {
-  value = aws_ecs_task_definition.service_task.container_definitions.name
+  value = jsonencode(aws_ecs_task_definition.service_task.container_definitions).name
 }
 
 output "ecs_service" {
