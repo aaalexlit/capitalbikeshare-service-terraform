@@ -19,6 +19,18 @@ on:
       app_url:
         description: "Service URL"
         value: ${{ jobs.apply.outputs.app_url }}
+      task_definition_json:
+        description: "Task definition json"
+        value: ${{ jobs.apply.outputs.task_definition_json }}
+      container_name:
+        description: "Container name"
+        value: ${{ jobs.apply.outputs.container_name }}
+      ecs_service:
+        description: "Container name"
+        value: ${{ jobs.apply.outputs.ecs_service }}
+      ecs_cluster:
+        description: "Container name"
+        value: ${{ jobs.apply.outputs.ecs_cluster }}
   workflow_dispatch:
     inputs:
       environment:
@@ -69,6 +81,10 @@ jobs:
     outputs:
       ecr_repository_url: ${{ steps.tf-apply.outputs.ecr_repository_url }}
       app_url: "http://${{ steps.tf-apply.outputs.app_url }}"
+      task_definition_json: ${{ steps.tf-apply.outputs.task_definition_json }}
+      container_name: ${{ steps.tf-apply.outputs.container_name }}
+      ecs_service: ${{ steps.tf-apply.outputs.ecs_service }}
+      ecs_cluster: ${{ steps.tf-apply.outputs.ecs_cluster }}
 
     steps:
       - name: check out repo
@@ -96,6 +112,10 @@ jobs:
           terraform apply -auto-approve --var-file="environments/${{inputs.environment}}/environment.tfvars"
           echo "ecr_repository_url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
           echo "app_url=$(terraform output -raw app_url)" >> $GITHUB_OUTPUT
+          echo "task_definition_json=$(terraform output -raw task_definition_json)" >> $GITHUB_OUTPUT
+          echo "container_name=$(terraform output -raw container_name)" >> $GITHUB_OUTPUT
+          echo "ecs_service=$(terraform output -raw ecs_service)" >> $GITHUB_OUTPUT
+          echo "ecs_cluster=$(terraform output -raw ecs_cluster)" >> $GITHUB_OUTPUT
 
   destroy:
     if: ${{ fromJson(inputs.destroy) }}

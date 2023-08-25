@@ -172,12 +172,3 @@ resource "aws_security_group" "service_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-#Log the load balancer app url
-output "app_url" {
-  value = aws_alb.application_load_balancer.dns_name
-}
-
-output "ecr_repository_url" {
-  value = "${aws_ecr_repository.prediction_service_ecr_repo.repository_url}"
-}
