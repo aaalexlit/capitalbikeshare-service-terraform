@@ -26,10 +26,10 @@ on:
         description: "Container name"
         value: ${{ jobs.apply.outputs.container_name }}
       ecs_service:
-        description: "Container name"
+        description: "ECS service name"
         value: ${{ jobs.apply.outputs.ecs_service }}
       ecs_cluster:
-        description: "Container name"
+        description: "ECS cluster name"
         value: ${{ jobs.apply.outputs.ecs_cluster }}
   workflow_dispatch:
     inputs:
