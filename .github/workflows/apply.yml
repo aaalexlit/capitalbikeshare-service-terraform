@@ -6,10 +6,12 @@ on:
         description: "What environment to act on"
         type: string
         default: stg
+        required: false
       ecr-only:
         description: "Only create ECR repo"
         default: false
         type: boolean
+        required: false
     outputs:
       ecr_repository_url:
         description: "ECR repository URL"
