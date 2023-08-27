@@ -12,6 +12,11 @@ on:
         default: false
         type: boolean
         required: false
+      destroy:
+        description: "Destroy the infra"
+        default: false
+        type: boolean  
+        required: false      
     outputs:
       ecr_repository_url:
         description: "ECR repository URL"
