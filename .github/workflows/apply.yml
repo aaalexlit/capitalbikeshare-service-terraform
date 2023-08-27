@@ -5,11 +5,9 @@ on:
       environment:
         description: "What environment to act on"
         type: string
-        required: true
         default: stg
       ecr-only:
         description: "Only create ECR repo"
-        required: true
         default: false
         type: boolean
     outputs:
