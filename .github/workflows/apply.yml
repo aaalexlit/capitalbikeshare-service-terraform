@@ -1,41 +1,6 @@
 name: apply-to-aws
 on:
-  workflow_call:
-    inputs:
-      environment:
-        description: "What environment to act on"
-        type: string
-        default: stg
-        required: false
-      ecr-only:
-        description: "Only create ECR repo"
-        default: false
-        type: boolean
-        required: false
-      destroy:
-        description: "Destroy the infra"
-        default: false
-        type: boolean  
-        required: false      
-    outputs:
-      ecr_repository_url:
-        description: "ECR repository URL"
-        value: ${{ jobs.apply.outputs.ecr_repository_url }}
-      app_url:
-        description: "Service URL"
-        value: ${{ jobs.apply.outputs.app_url }}
-      task_definition_json:
-        description: "Task definition json"
-        value: ${{ jobs.apply.outputs.task_definition_json }}
-      container_name:
-        description: "Container name"
-        value: ${{ jobs.apply.outputs.container_name }}
-      ecs_service:
-        description: "ECS service name"
-        value: ${{ jobs.apply.outputs.ecs_service }}
-      ecs_cluster:
-        description: "ECS cluster name"
-        value: ${{ jobs.apply.outputs.ecs_cluster }}
+  repository_dispatch: 
   workflow_dispatch:
     inputs:
       environment:
