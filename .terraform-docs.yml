@@ -1,0 +1,11 @@
+formatter: markdown document
+
+sections:
+  hide:
+    - data-sources
+
+output:
+  file: README.md
+
+settings:
+  hide-empty: true

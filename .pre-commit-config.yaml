@@ -1,0 +1,16 @@
+---
+repos:
+  - repo: local
+    hooks:
+      - id: terraform-docs
+        name: terraform documentation
+        language: docker_image
+        entry: quay.io/terraform-docs/terraform-docs:latest
+        args: ["."]
+        pass_filenames: false
+      - id: tfsec
+        name: terraform security
+        description: TFsec is a tool to statically analyze Terraform templates to spot potential security issues, uses projects official docker image.
+        language: docker_image
+        entry: aquasec/tfsec-alpine:latest
+        pass_filenames: false

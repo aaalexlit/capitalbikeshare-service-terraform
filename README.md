@@ -120,3 +120,112 @@ Destroy (needs confirmation)
 tflocal destroy -var-file="environments/${TF_ENV}/environment.tfvars"
 ```
 
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+The following requirements are needed by this module:
+
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.5)
+
+- <a name="requirement_aws"></a> [aws](#requirement\_aws) (~> 5.9)
+
+## Providers
+
+The following providers are used by this module:
+
+- <a name="provider_aws"></a> [aws](#provider\_aws) (5.13.1)
+
+## Resources
+
+The following resources are used by this module:
+
+- [aws_alb.application_load_balancer](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/alb) (resource)
+- [aws_default_subnet.default_subnet_a](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_subnet) (resource)
+- [aws_default_subnet.default_subnet_b](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_subnet) (resource)
+- [aws_default_vpc.default_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_vpc) (resource)
+- [aws_ecr_repository.prediction_service_ecr_repo](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository) (resource)
+- [aws_ecs_cluster.ecs_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster) (resource)
+- [aws_ecs_service.app_service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) (resource)
+- [aws_ecs_task_definition.service_task](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) (resource)
+- [aws_iam_role.ecsTaskExecutionRole](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) (resource)
+- [aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) (resource)
+- [aws_lb_listener.listener](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) (resource)
+- [aws_lb_target_group.target_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) (resource)
+- [aws_security_group.load_balancer_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) (resource)
+- [aws_security_group.service_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) (resource)
+
+## Required Inputs
+
+The following input variables are required:
+
+### <a name="input_cpu"></a> [cpu](#input\_cpu)
+
+Description: ECS CPU to set to the tasks.
+
+Type: `number`
+
+### <a name="input_desired_count"></a> [desired\_count](#input\_desired\_count)
+
+Description: How many ECS Tasks to initialy deploy per service.
+
+Type: `number`
+
+### <a name="input_environment"></a> [environment](#input\_environment)
+
+Description: Environment name
+
+Type: `string`
+
+### <a name="input_memory"></a> [memory](#input\_memory)
+
+Description: ECS memory to set to the tasks.
+
+Type: `number`
+
+### <a name="input_region"></a> [region](#input\_region)
+
+Description: AWS Region where to create the resources.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### <a name="input_ecr_repo_name"></a> [ecr\_repo\_name](#input\_ecr\_repo\_name)
+
+Description: ECR repo name
+
+Type: `string`
+
+Default: `"capitalbikeshare-dv-model-pipeline"`
+
+## Outputs
+
+The following outputs are exported:
+
+### <a name="output_app_url"></a> [app\_url](#output\_app\_url)
+
+Description: Log the load balancer app url
+
+### <a name="output_container_name"></a> [container\_name](#output\_container\_name)
+
+Description: n/a
+
+### <a name="output_ecr_repository_url"></a> [ecr\_repository\_url](#output\_ecr\_repository\_url)
+
+Description: n/a
+
+### <a name="output_ecs_cluster"></a> [ecs\_cluster](#output\_ecs\_cluster)
+
+Description: n/a
+
+### <a name="output_ecs_service"></a> [ecs\_service](#output\_ecs\_service)
+
+Description: n/a
+
+### <a name="output_task_definition_json"></a> [task\_definition\_json](#output\_task\_definition\_json)
+
+Description: n/a
+<!-- END_TF_DOCS -->
